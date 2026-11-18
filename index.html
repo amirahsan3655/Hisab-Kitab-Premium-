@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0d10" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest?v=10" />
+  <title>Hisab Kitab Premium | Personal Finance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=225" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="logo-splash" id="logoSplash" hidden>
+    <div class="logo-splash-mark"><i data-lucide="wallet"></i></div>
+    <div class="logo-splash-text">Hisab Kitab</div>
+  </div>
+  <div class="app-shell" data-nav-pos="left">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+      <div class="brand">
+        <button type="button" class="brand-mark" id="brandLogoBtn" title="Open Wallet" aria-label="Open Wallet">
+          <i data-lucide="wallet"></i>
+        </button>
+        <div class="brand-text">
+          <strong>Hisab Kitab</strong>
+          <span>PREMIUM</span>
+        </div>
+        <!-- sidebarMenuBtn removed: only topbar menuBtn remains -->
+      </div>
+      </div>
+
+      <div class="sidebar-scroll">
+      <div class="workspace-label" data-i18n="label_workspace">WORKSPACE</div>
+      <nav class="nav-menu">
+        <button class="nav-link active" data-page="overview"><i data-lucide="layout-dashboard"></i><span data-i18n="nav_overview">Overview</span></button>
+        <button class="nav-link" data-page="transactions"><i data-lucide="arrow-left-right"></i><span data-i18n="nav_transactions">Transactions</span></button>
+        <button class="nav-link" data-page="reports"><i data-lucide="chart-no-axes-combined"></i><span data-i18n="nav_reports">Reports</span></button>
+        <button class="nav-link" data-page="budget"><i data-lucide="target"></i><span data-i18n="nav_budget">Budget</span></button>
+        <button class="nav-link" data-page="goals"><i data-lucide="flag"></i><span data-i18n="nav_goals">Goals</span></button>
+        <button class="nav-link" data-page="debts"><i data-lucide="hand-coins"></i><span data-i18n="nav_debts">Debts</span></button>
+        <button class="nav-link" data-page="bills"><i data-lucide="calendar-clock"></i><span data-i18n="nav_bills">Bills</span></button>
+        <button class="nav-link" data-page="insights"><i data-lucide="sparkles"></i><span>Insights</span></button>
+        <button class="nav-link nav-link-end" data-page="settings"><i data-lucide="settings"></i><span data-i18n="label_settings">Settings</span></button>
+        <button class="nav-link nav-link-end" data-page="profile"><i data-lucide="user"></i><span>Profile</span></button>
+      </nav>
+
+      <div class="sidebar-bottom" id="sidebarBottom">
+        <!-- Smart Insight stays outside Settings -->
+        <div class="tip-card tip-stable" id="insightCard">
+          <div class="tip-header tip-header-static">
+            <span class="tip-header-left">
+              <span class="tip-icon"><i data-lucide="sparkles"></i></span>
+              <strong>Smart Insight</strong>
+            </span>
+          </div>
+          <div class="tip-body" id="insightBody">
+            <p id="insightText">Add a few transactions to unlock personalized spending insights.</p>
+          </div>
+        </div>
+
+        <!-- hidden legacy hooks -->
+        <div id="themePicker" hidden aria-hidden="true">
+          <button id="themeToggle" type="button" tabindex="-1"></button>
+          <span id="themeLabel" hidden>Dark</span>
+          <div id="themePanel" hidden></div>
+        </div>
+        <button id="insightToggle" type="button" hidden tabindex="-1"></button>
+      </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <!-- Settings just above profile / logout -->
+        <div class="sb-settings" id="sbSettings">
+          <button type="button" class="sb-settings-btn" id="sbSettingsToggle" aria-expanded="false">
+            <span class="sb-settings-btn-left">
+              <i data-lucide="settings"></i>
+              <span data-i18n="label_settings">Settings</span>
+            </span>
+            <i data-lucide="chevron-right" class="sb-settings-chevron"></i>
+          </button>
+          <div class="sb-settings-panel" id="sbSettingsPanel" hidden></div>
+        </div>
+        <div class="profile-menu" id="profileMenu">
+          <button type="button" class="profile-trigger sb-profile-card" id="profileTrigger" aria-expanded="false" aria-haspopup="true">
+            <div class="avatar avatar-lg" id="userAvatar">
+              <span id="userAvatarInitials">HK</span>
+              <img id="userAvatarImg" alt="" hidden>
+            </div>
+            <div class="profile-copy">
+              <strong id="userNameLabel">My Workspace</strong>
+              <span id="userEmailLabel">Premium Plan</span>
+            </div>
+            <span class="sb-profile-status" title="Signed in" aria-hidden="true"></span>
+            <i data-lucide="chevron-right" class="profile-chevron"></i>
+          </button>
+          <div class="profile-dropdown" id="profileDropdown" hidden>
+            <div class="profile-drop-head">
+              <div class="avatar-photo-wrap" id="avatarPhotoWrap">
+                <button type="button" class="avatar avatar-xl avatar-clickable" id="userAvatarLarge" title="Change photo">
+                  <span id="userAvatarInitialsLg">HK</span>
+                  <img id="userAvatarImgLg" alt="" hidden>
+                </button>
+                <div class="photo-pop" id="photoPop" hidden>
+                  <button type="button" class="photo-pop-item" id="changePhotoBtn">
+                    <i data-lucide="camera"></i><span>Change photo</span>
+                  </button>
+                  <button type="button" class="photo-pop-item" id="removePhotoBtn" hidden>
+                    <i data-lucide="image-off"></i><span>Remove photo</span>
+                  </button>
+                </div>
+                <input type="file" id="profilePhotoInput" accept="image/*" hidden>
+              </div>
+              <div class="profile-drop-meta">
+                <strong id="userNameLabelDrop">User</strong>
+                <span id="userEmailLabelDrop" hidden>email</span>
+                <span id="userMobileLabelDrop" class="profile-mobile" hidden></span>
+                <em class="profile-plan">Premium · Local account</em>
+              </div>
+            </div>
+            <div class="profile-drop-actions">
+              <button type="button" class="profile-drop-item" id="profileBackupBtn">
+                <i data-lucide="cloud-upload"></i><span>Backup data</span>
+              </button>
+              <button type="button" class="profile-drop-item" id="profileAccountBtn">
+                <i data-lucide="user-cog"></i><span>Account & password</span>
+              </button>
+              <button type="button" class="profile-drop-item" id="profileSettingsBtn">
+                <i data-lucide="settings"></i><span>Open settings</span>
+              </button>
+              <button type="button" class="profile-drop-item" id="profileCreateAccountBtn" hidden>
+                <i data-lucide="user-plus"></i><span>Create account</span>
+              </button>
+              <button type="button" id="profileLockBtn" hidden tabindex="-1" aria-hidden="true"></button>
+              <button type="button" id="profileToolsBtn" hidden tabindex="-1" aria-hidden="true"></button>
+            </div>
+            <div class="profile-drop-foot">
+              <button type="button" class="profile-drop-item danger" id="logoutBtn">
+                <i data-lucide="log-out"></i><span>Log out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu"><i data-lucide="menu"></i></button>
+          <div>
+            <div class="eyebrow" data-i18n="label_financial_space">YOUR FINANCIAL SPACE</div>
+            <h1 id="pageTitle">Overview</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <div class="today-pill"><i data-lucide="calendar-days"></i><span id="todayLabel">Today</span></div>
+          <button type="button" class="icon-btn" id="privacyToggleBtn" title="Privacy mode" aria-label="Toggle privacy mode"><i data-lucide="eye"></i></button>
+          <button class="primary-btn" id="addTopBtn"><i data-lucide="plus"></i><span data-i18n="add_tx">Add transaction</span></button>
+        </div>
+      </header>
+
+      <!-- OVERVIEW -->
+      <section class="page-section page-visible" id="overviewPage">
+        <div class="welcome-row">
+          <div>
+            <h2 id="greetingTitle">Good to see you <span class="gold-text">👋</span></h2>
+            <p id="greetingSub">Your money, clearly under control.</p>
+          </div>
+          <div class="welcome-right">
+            <div class="streak-pill" id="streakPill" title="Tracking streak">
+              <i data-lucide="flame"></i>
+              <span id="streakText">0 day streak</span>
+            </div>
+            <div class="period-filter" id="periodFilter">
+              <button type="button" class="period-btn" data-period="day">Day</button>
+              <button type="button" class="period-btn" data-period="week">Week</button>
+              <button type="button" class="period-btn" data-period="month">Month</button>
+              <button type="button" class="period-btn" data-period="year">Year</button>
+              <button type="button" class="period-btn active" data-period="all">All</button>
+            </div>
+          </div>
+        </div>
+<p class="exec-summary" id="execSummary" hidden>Executive summary will appear after you add transactions.</p>
+        <div class="premium-strip">
+          <article class="health-card panel">
+            <div class="health-top">
+              <div>
+                <div class="eyebrow">FINANCIAL HEALTH</div>
+                <strong id="healthLabel">Getting started</strong>
+              </div>
+              <div class="health-score" id="healthScore">—</div>
+            </div>
+            <div class="health-bar"><div class="health-fill" id="healthFill" style="width:0%"></div></div>
+            <p class="health-note muted" id="healthNote">Add income and expenses to see your score.</p>
+          </article>
+          <article class="story-card panel">
+            <div class="eyebrow">THIS MONTH</div>
+            <p id="monthStory">Your monthly story will appear here after a few entries.</p>
+            <div class="mini-spark" id="miniSpark" aria-hidden="true"></div>
+          </article>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card balance-card">
+            <div class="stat-top">
+              <span data-i18n="stat_balance">Total Balance</span>
+              <span class="stat-icon"><i data-lucide="wallet"></i></span>
+            </div>
+            <div class="stat-value" id="balanceValue">SAR 0.00</div>
+            <div class="stat-foot"><span class="status-dot"></span><span data-i18n="stat_balance_sub">Income − Expenses</span></div>
+            <div class="card-glow"></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span data-i18n="stat_income">Income</span>
+              <span class="stat-icon income-icon"><i data-lucide="trending-up"></i></span>
+            </div>
+            <div class="stat-value" id="incomeValue">SAR 0.00</div>
+            <div class="stat-foot" id="incomeChange"><span class="positive">—</span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span data-i18n="stat_expense">Expenses</span>
+              <span class="stat-icon expense-icon"><i data-lucide="trending-down"></i></span>
+            </div>
+            <div class="stat-value" id="expenseValue">SAR 0.00</div>
+            <div class="stat-foot" id="expenseChange"><span class="negative">—</span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span data-i18n="stat_tx">Transactions</span>
+              <span class="stat-icon"><i data-lucide="receipt-text"></i></span>
+            </div>
+            <div class="stat-value" id="countValue">0</div>
+            <div class="stat-foot"><span>All recorded entries</span></div>
+          </article>
+        </div>
+
+
+        <div class="kpi-extra-grid">
+          <article class="panel kpi-mini">
+            <div class="eyebrow">SAVINGS RATE</div>
+            <div class="kpi-mini-value" id="savingsRateValue">—</div>
+            <div class="muted" id="savingsRateSub">Income saved this period</div>
+          </article>
+          <article class="panel kpi-mini">
+            <div class="eyebrow">BURN RATE</div>
+            <div class="kpi-mini-value" id="burnRateValue">—</div>
+            <div class="muted" id="burnRateSub">Avg daily spend</div>
+          </article>
+          <article class="panel kpi-mini">
+            <div class="eyebrow">VS LAST PERIOD</div>
+            <div class="kpi-mini-value" id="vsLastValue">—</div>
+            <div class="muted" id="vsLastSub">Expense change</div>
+          </article>
+          <article class="panel kpi-mini" id="forecastCard">
+            <div class="eyebrow">MONTH-END FORECAST</div>
+            <div class="kpi-mini-value" id="forecastValue">—</div>
+            <div class="muted" id="forecastSub">Projected balance</div>
+          </article>
+        </div>
+        <div class="pro-split">
+          <article class="panel">
+            <div class="panel-head-row">
+              <h3>Alerts</h3>
+              <span class="muted" id="alertCount">0</span>
+            </div>
+            <div id="alertsList" class="alerts-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head-row">
+              <h3>Targets</h3>
+              <button type="button" class="text-btn" data-go="goals">Goals <i data-lucide="arrow-up-right"></i></button>
+            </div>
+            <div class="targets-row" id="targetsRow">
+              <div class="target-ring-wrap">
+                <svg viewBox="0 0 36 36" class="target-ring">
+                  <path class="ring-bg" d="M18 2.5a15.5 15.5 0 1 1 0 31 15.5 15.5 0 1 1 0-31"/>
+                  <path id="goalRing" class="ring-fg ring-goal" stroke-dasharray="0,100" d="M18 2.5a15.5 15.5 0 1 1 0 31 15.5 15.5 0 1 1 0-31"/>
+                </svg>
+                <div class="target-ring-label"><strong id="goalRingPct">0%</strong><span>Goals</span></div>
+              </div>
+              <div class="target-ring-wrap">
+                <svg viewBox="0 0 36 36" class="target-ring">
+                  <path class="ring-bg" d="M18 2.5a15.5 15.5 0 1 1 0 31 15.5 15.5 0 1 1 0-31"/>
+                  <path id="saveRing" class="ring-fg ring-save" stroke-dasharray="0,100" d="M18 2.5a15.5 15.5 0 1 1 0 31 15.5 15.5 0 1 1 0-31"/>
+                </svg>
+                <div class="target-ring-label"><strong id="saveRingPct">0%</strong><span>Saved</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Budget Progress Card -->
+        <article class="panel budget-overview-card" id="budgetOverviewCard">
+          <div class="budget-header">
+            <div>
+              <h3>Monthly Budget</h3>
+              <p id="budgetSubtitle">Set a budget to track your spending</p>
+            </div>
+            <button class="text-btn" data-go="budget">Manage <i data-lucide="arrow-up-right"></i></button>
+          </div>
+          <div class="budget-progress-wrap">
+            <div class="budget-amounts">
+              <div>
+                <span class="muted">Spent</span>
+                <strong id="budgetSpent">SAR 0.00</strong>
+              </div>
+              <div class="text-right">
+                <span class="muted">Budget</span>
+                <strong id="budgetLimit">SAR 0.00</strong>
+              </div>
+            </div>
+            <div class="progress-track large">
+              <div class="progress-fill" id="budgetProgressBar" style="width:0%"></div>
+            </div>
+            <div class="budget-meta">
+              <span id="budgetPercent">0% used</span>
+              <span id="budgetRemaining">SAR 0.00 remaining</span>
+            </div>
+          </div>
+        </article>
+
+        <div class="dashboard-grid">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Cash Flow</h3>
+                <p>Income vs expenses — last 6 months</p>
+              </div>
+              <span class="panel-badge">6 MONTHS</span>
+            </div>
+            <div class="chart-wrap"><canvas id="cashflowChart"></canvas></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Expense Breakdown</h3>
+                <p>Where your money goes</p>
+              </div>
+              <button class="text-btn" data-go="reports">Details <i data-lucide="arrow-up-right"></i></button>
+            </div>
+            <div class="donut-wrap">
+              <canvas id="categoryChart"></canvas>
+              <div class="donut-center">
+                <strong id="donutTotal">SAR 0</strong>
+                <span>Total spent</span>
+              </div>
+            </div>
+            <div class="legend-list" id="categoryLegend">
+              <div class="empty-mini">Add expenses to see categories.</div>
+            </div>
+          </article>
+        </div>
+
+        <article class="panel transactions-panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Recent Transactions</h3>
+              <p>Your latest money activity</p>
+            </div>
+            <button class="text-btn" data-go="transactions">View all <i data-lucide="arrow-right"></i></button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>DETAIL</th>
+                  <th>CATEGORY</th>
+                  <th>DATE</th>
+                  <th>AMOUNT</th>
+                </tr>
+              </thead>
+              <tbody id="recentRows"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="recentEmpty">
+            <div class="empty-icon"><i data-lucide="receipt"></i></div>
+            <strong>No transactions yet</strong>
+            <span>Add your first income or expense to get started.</span>
+            <button class="outline-btn" id="emptyAddBtn">Add first transaction</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- TRANSACTIONS -->
+      <section class="page-section" id="transactionsPage">
+        <div class="section-intro">
+          <div>
+            <h2>All Transactions</h2>
+            <p>Manage, edit and review every entry.</p>
+          </div>
+          <button class="primary-btn" id="addTransactionsBtn"><i data-lucide="plus"></i>Add transaction</button>
+        </div>
+        <article class="panel">
+          <div class="filters">
+            <div class="search-box">
+              <i data-lucide="search"></i>
+              <input id="searchInput" type="search" placeholder="Search description or category..." />
+            </div>
+            <select id="typeFilter">
+              <option value="all">All types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expenses</option>
+              <option value="remittance">Remittance</option>
+              <option value="transfer">Transfer</option>
+            </select>
+            <select id="categoryFilter">
+              <option value="all">All categories</option>
+              <option>Salary</option>
+              <option>Food</option>
+              <option>Transport</option>
+              <option>Shopping</option>
+              <option>Bills</option>
+              <option>Health</option>
+              <option>Entertainment</option>
+              <option>Other</option>
+            </select>
+            <button class="outline-btn export-btn" id="exportBtn"><i data-lucide="download"></i>Export CSV</button>
+            <button class="outline-btn export-btn" id="importCsvBtn" type="button"><i data-lucide="upload"></i>Import CSV</button>
+            <input type="file" id="importCsvInput" accept=".csv,text/csv" hidden>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>DETAIL</th>
+                  <th>TYPE</th>
+                  <th>CATEGORY</th>
+                  <th>DATE</th>
+                  <th>AMOUNT</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="allRows"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="allEmpty">
+            <div class="empty-icon"><i data-lucide="search-x"></i></div>
+            <strong>No matching transactions</strong>
+            <span>Try changing your search or add a new entry.</span>
+          </div>
+        </article>
+      </section>
+
+      <!-- REPORTS -->
+      <section class="page-section" id="reportsPage">
+        <div class="section-intro">
+          <div>
+            <h2>Financial Reports</h2>
+            <p>Clear picture of your money habits.</p>
+          </div>
+        </div>
+        <div class="stats-grid report-stats">
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Income recorded</span>
+              <span class="stat-icon income-icon"><i data-lucide="arrow-down-left"></i></span>
+            </div>
+            <div class="stat-value" id="reportIncome">SAR 0.00</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Expenses recorded</span>
+              <span class="stat-icon expense-icon"><i data-lucide="arrow-up-right"></i></span>
+            </div>
+            <div class="stat-value" id="reportExpense">SAR 0.00</div>
+          </article>
+        </div>
+        <div class="dashboard-grid report-grid">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Monthly Comparison</h3>
+                <p>Income and expenses by month</p>
+              </div>
+            </div>
+            <div class="chart-wrap"><canvas id="reportChart"></canvas></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Category Totals</h3>
+                <p>Your spending by category</p>
+              </div>
+            </div>
+            <div id="reportCategories" class="report-category-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- BUDGET PAGE -->
+      <section class="page-section" id="budgetPage">
+        <div class="section-intro">
+          <div>
+            <h2>Monthly Budget</h2>
+            <p>Set a limit and stay in control of your spending.</p>
+          </div>
+          <button class="primary-btn" id="setBudgetBtn"><i data-lucide="pencil"></i>Set Budget</button>
+        </div>
+
+        <div class="budget-hero panel">
+          <div class="budget-hero-left">
+            <div class="eyebrow">CURRENT MONTH</div>
+            <div class="budget-big-value" id="budgetPageLimit">SAR 0.00</div>
+            <p class="muted">Your monthly spending limit</p>
+          </div>
+          <div class="budget-hero-right">
+            <div class="budget-ring-wrap">
+              <svg class="budget-ring" viewBox="0 0 120 120">
+                <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                <circle class="ring-progress" id="budgetPageRing" cx="60" cy="60" r="52"></circle>
+              </svg>
+              <div class="ring-center">
+                <strong id="budgetRingPercent">0%</strong>
+                <span>used</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid budget-stats">
+          <article class="stat-card">
+            <div class="stat-top"><span>Spent this month</span></div>
+            <div class="stat-value" id="budgetPageSpent">SAR 0.00</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Remaining</span></div>
+            <div class="stat-value" id="budgetPageRemaining">SAR 0.00</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Daily average</span></div>
+            <div class="stat-value" id="budgetPageDaily">SAR 0.00</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Days left</span></div>
+            <div class="stat-value" id="budgetPageDays">0</div>
+          </article>
+        </div>
+      </section>
+
+
+      <!-- GOALS -->
+      <section class="page-section" id="goalsPage">
+        <div class="section-intro">
+          <div>
+            <h2 data-i18n="goals_title">Saving Goals</h2>
+            <p data-i18n="goals_sub">Track targets like phone, travel, emergency fund.</p>
+          </div>
+          <button class="primary-btn" id="addGoalBtn" onclick="window.openGoalModal&&window.openGoalModal()"><i data-lucide="plus"></i><span data-i18n="add_goal">Add goal</span></button>
+        </div>
+        <div class="goals-grid" id="goalsList"></div>
+        <div class="empty-state show" id="goalsEmpty">
+          <div class="empty-icon"><i data-lucide="flag"></i></div>
+          <strong data-i18n="no_goals">No goals yet</strong>
+          <span data-i18n="no_goals_sub">Create a saving goal to stay motivated.</span>
+          <button type="button" class="primary-btn" id="addGoalBtn2" style="margin-top:12px" onclick="window.openGoalModal&&window.openGoalModal()"><i data-lucide="plus"></i> Add goal</button>
+        </div>
+      </section>
+
+      <!-- DEBTS -->
+      <section class="page-section" id="debtsPage">
+        <div class="section-intro">
+          <div>
+            <h2 data-i18n="debts_title">Debts & Loans</h2>
+            <p data-i18n="debts_sub">Money you lent or borrowed.</p>
+          </div>
+          <button class="primary-btn" id="addDebtBtn" onclick="window.openDebtModal&&window.openDebtModal()"><i data-lucide="plus"></i><span data-i18n="add_debt">Add debt</span></button>
+        </div>
+        <div class="stats-grid" style="grid-template-columns:1fr 1fr;max-width:520px;margin-bottom:16px">
+          <article class="stat-card"><div class="stat-top"><span data-i18n="to_receive">To receive</span></div><div class="stat-value amount-income" id="debtReceive">—</div></article>
+          <article class="stat-card"><div class="stat-top"><span data-i18n="to_pay">To pay</span></div><div class="stat-value amount-expense" id="debtPay">—</div></article>
+        </div>
+        <div class="panel">
+          <div id="debtsList"></div>
+          <div class="empty-state show" id="debtsEmpty">
+            <div class="empty-icon"><i data-lucide="hand-coins"></i></div>
+            <strong data-i18n="no_debts">No debts recorded</strong>
+            <span>Tap <b>Add debt</b> to track money lent or borrowed.</span>
+            <button type="button" class="primary-btn" id="addDebtBtn2" style="margin-top:12px" onclick="window.openDebtModal&&window.openDebtModal()"><i data-lucide="plus"></i> Add debt</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- BILLS -->
+      <section class="page-section" id="billsPage">
+        <div class="section-intro">
+          <div>
+            <h2>Bills & Reminders</h2>
+            <p>Track upcoming bills so nothing is missed.</p>
+          </div>
+          <button class="primary-btn" id="addBillBtn" type="button"><i data-lucide="plus"></i>Add bill</button>
+        </div>
+        <div class="stats-grid" style="grid-template-columns:1fr 1fr;max-width:520px;margin-bottom:16px">
+          <article class="stat-card"><div class="stat-top"><span>Due soon</span></div><div class="stat-value" id="billsDueSoon">0</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Overdue</span></div><div class="stat-value amount-expense" id="billsOverdue">0</div></article>
+        </div>
+        <div class="panel">
+          <div id="billsList"></div>
+          <div class="empty-state show" id="billsEmpty">
+            <div class="empty-icon"><i data-lucide="calendar-clock"></i></div>
+            <strong>No bills yet</strong>
+            <span>Add rent, electricity, internet or any recurring bill.</span>
+            <button type="button" class="primary-btn" id="addBillBtn2" style="margin-top:12px"><i data-lucide="plus"></i> Add bill</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOOLS -->
+      <!-- Tools page removed — content lives under Settings. Keep empty section so switchPage("tools") can redirect. -->
+      <section class="page-section" id="toolsPage" hidden aria-hidden="true"></section>
+
+
+
+      <!-- PROFILE HUB (main screen cards) -->
+      <section class="page-section" id="profilePage">
+        <div class="prem-profile">
+          <div class="prem-hero" id="profileHubHead">
+            <div class="prem-hero-bg" aria-hidden="true"></div>
+            <div class="prem-hero-inner">
+              <div class="prem-hero-identity">
+                <div class="avatar-photo-wrap profile-hub-photo-wrap ap-photo prem-avatar-wrap">
+                  <button type="button" class="avatar avatar-xxl avatar-clickable" id="profileHubAvatar" title="Change photo" aria-label="Change profile photo">
+                    <span id="profileHubInitials">HK</span>
+                    <img id="profileHubImg" alt="" hidden>
+                    <span class="avatar-cam-badge" aria-hidden="true"><i data-lucide="camera"></i></span>
+                  </button>
+                  <div class="photo-pop" id="hubPhotoPop" hidden>
+                    <button type="button" class="photo-pop-item" id="hubChangePhotoBtn">
+                      <i data-lucide="camera"></i><span>Change photo</span>
+                    </button>
+                    <button type="button" class="photo-pop-item" id="hubRemovePhotoBtn" hidden>
+                      <i data-lucide="image-off"></i><span>Remove photo</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="prem-hero-copy">
+                  <div class="prem-eyebrow">ACCOUNT</div>
+                  <h2 id="profileHubName">User</h2>
+                  <p class="prem-email" id="profileHubEmail">—</p>
+                  <div class="prem-chips">
+                    <span class="profile-badge" id="profileHubPlan">Premium</span>
+                    <span class="prem-chip muted" id="profileHubMeta">Local · Private</span>
+                  </div>
+                </div>
+              </div>
+              <div class="prem-hero-actions">
+                <button type="button" class="primary-btn" id="profileEditBtn">
+                  <i data-lucide="pencil"></i> Edit profile
+                </button>
+                <button type="button" class="prem-ghost" id="hubLogoutBtn">
+                  <i data-lucide="log-out"></i> Sign out
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="prem-stats">
+            <div class="prem-stat panel">
+              <span>Member since</span>
+              <strong id="profMemberSince">—</strong>
+            </div>
+            <div class="prem-stat panel">
+              <span>Transactions</span>
+              <strong id="profTxCount">0</strong>
+            </div>
+            <div class="prem-stat panel">
+              <span>App lock</span>
+              <strong id="profLockStatus">Off</strong>
+            </div>
+            <div class="prem-stat panel">
+              <span>Last active</span>
+              <strong id="profLastActive">Now</strong>
+            </div>
+          </div>
+
+          <!-- VIEW mode (default) -->
+          <div id="profileViewMode" class="prem-view">
+            <div class="prem-columns">
+              <section class="prem-panel panel">
+                <header class="prem-panel-head">
+                  <div class="prem-icon"><i data-lucide="user-round"></i></div>
+                  <div>
+                    <h3>Personal details</h3>
+                    <p>How you appear in the app</p>
+                  </div>
+                </header>
+                <div class="prem-view-rows">
+                  <div class="prem-view-row">
+                    <span>Display name</span>
+                    <strong id="viewProfName">—</strong>
+                  </div>
+                  <div class="prem-view-row">
+                    <span>Email</span>
+                    <strong id="viewProfEmail">—</strong>
+                  </div>
+                  <div class="prem-view-row">
+                    <span>Mobile</span>
+                    <strong id="viewProfMobile">—</strong>
+                  </div>
+                </div>
+              </section>
+              <section class="prem-panel panel">
+                <header class="prem-panel-head">
+                  <div class="prem-icon"><i data-lucide="shield-check"></i></div>
+                  <div>
+                    <h3>Security</h3>
+                    <p>Password protected on this device</p>
+                  </div>
+                </header>
+                <div class="prem-view-rows">
+                  <div class="prem-view-row">
+                    <span>Password</span>
+                    <strong>••••••••</strong>
+                  </div>
+                  <div class="prem-view-row">
+                    <span>App lock (PIN)</span>
+                    <strong id="viewProfLock">Off</strong>
+                  </div>
+                  <div class="prem-view-row">
+                    <span>Account type</span>
+                    <strong id="viewProfPlan">Local</strong>
+                  </div>
+                </div>
+              </section>
+            </div>
+            <section class="prem-panel panel">
+              <header class="prem-panel-head">
+                <div class="prem-icon"><i data-lucide="sliders-horizontal"></i></div>
+                <div>
+                  <h3>Preferences</h3>
+                  <p>Current display settings</p>
+                </div>
+              </header>
+              <div class="prem-view-rows prem-view-rows-3">
+                <div class="prem-view-row">
+                  <span>Privacy mode</span>
+                  <strong id="viewPrivacy">Off</strong>
+                </div>
+                <div class="prem-view-row">
+                  <span>Compact numbers</span>
+                  <strong id="viewCompact">Off</strong>
+                </div>
+                <div class="prem-view-row">
+                  <span>Month-end forecast</span>
+                  <strong id="viewForecast">On</strong>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- EDIT mode (hidden until Edit) -->
+          <form id="profileStudioForm" class="prem-form" autocomplete="off" hidden>
+            <div class="prem-columns">
+              <section class="prem-panel panel">
+                <header class="prem-panel-head">
+                  <div class="prem-icon"><i data-lucide="user-round"></i></div>
+                  <div>
+                    <h3>Personal details</h3>
+                    <p>Update name and contact</p>
+                  </div>
+                </header>
+                <div class="prem-fields">
+                  <label class="prem-field">
+                    <span>Display name</span>
+                    <input id="profName" type="text" maxlength="40" placeholder="Your name" autocomplete="name">
+                  </label>
+                  <label class="prem-field">
+                    <span>Email</span>
+                    <input id="profEmail" type="email" maxlength="80" placeholder="name@gmail.com" autocomplete="email">
+                  </label>
+                  <label class="prem-field">
+                    <span>Mobile number</span>
+                    <div class="ap-phone-row">
+                      <select id="profCountry" class="ap-country-select" aria-label="Country code"></select>
+                      <input id="profMobile" type="tel" maxlength="18" inputmode="tel" placeholder="Phone number" autocomplete="tel-national">
+                    </div>
+                  </label>
+                </div>
+              </section>
+              <section class="prem-panel panel">
+                <header class="prem-panel-head">
+                  <div class="prem-icon"><i data-lucide="shield-check"></i></div>
+                  <div>
+                    <h3>Password</h3>
+                    <p>Leave blank to keep current password</p>
+                  </div>
+                </header>
+                <div class="prem-fields">
+                  <label class="prem-field" id="profCurrentPassWrap">
+                    <span>Current password</span>
+                    <input id="profCurrentPass" type="password" minlength="4" placeholder="••••••••" autocomplete="off" data-lpignore="true">
+                  </label>
+                  <label class="prem-field">
+                    <span>New password</span>
+                    <input id="profNewPass" type="password" minlength="4" placeholder="Min. 4 characters" autocomplete="new-password" data-lpignore="true">
+                  </label>
+                  <label class="prem-field">
+                    <span>Confirm password</span>
+                    <input id="profNewPass2" type="password" minlength="4" placeholder="Repeat password" autocomplete="new-password" data-lpignore="true">
+                  </label>
+                </div>
+              </section>
+            </div>
+            <section class="prem-panel panel">
+              <header class="prem-panel-head">
+                <div class="prem-icon"><i data-lucide="sliders-horizontal"></i></div>
+                <div>
+                  <h3>Preferences</h3>
+                  <p>Privacy and display</p>
+                </div>
+              </header>
+              <div class="prem-prefs">
+                <label class="prem-pref">
+                  <div>
+                    <strong>Privacy mode</strong>
+                    <span>Hide balances on Overview</span>
+                  </div>
+                  <span class="pf-switch">
+                    <input type="checkbox" id="profPrivacyMode">
+                    <span class="pf-switch-slider"></span>
+                  </span>
+                </label>
+                <label class="prem-pref">
+                  <div>
+                    <strong>Compact numbers</strong>
+                    <span>Show 1.2k style for large amounts</span>
+                  </div>
+                  <span class="pf-switch">
+                    <input type="checkbox" id="profCompactMoney">
+                    <span class="pf-switch-slider"></span>
+                  </span>
+                </label>
+                <label class="prem-pref">
+                  <div>
+                    <strong>Month-end forecast</strong>
+                    <span>Projected balance on Overview</span>
+                  </div>
+                  <span class="pf-switch">
+                    <input type="checkbox" id="profForecast" checked>
+                    <span class="pf-switch-slider"></span>
+                  </span>
+                </label>
+              </div>
+            </section>
+            <p class="auth-error" id="profileStudioError" hidden role="alert"></p>
+            <div class="prem-footer">
+              <button type="button" class="prem-ghost" id="profileCancelEditBtn2">Cancel</button>
+              <button type="submit" class="primary-btn prem-save" id="profileSaveBtn">
+                <i data-lucide="check"></i> Save changes
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <button type="button" id="hubAccountBtn" hidden tabindex="-1" aria-hidden="true"></button>
+        <button type="button" id="hubBackupBtn" hidden tabindex="-1" aria-hidden="true"></button>
+        <button type="button" id="hubSettingsBtn" hidden tabindex="-1" aria-hidden="true"></button>
+        <button type="button" id="hubLockBtn" hidden tabindex="-1" aria-hidden="true"></button>
+        <button type="button" id="hubBudgetBtn" hidden tabindex="-1" aria-hidden="true"></button>
+        <div id="profileCardsGrid" hidden></div>
+      </section>
+
+      <section class="page-section" id="insightsPage">
+        <div class="section-intro">
+          <div>
+            <h2>Insights Lab</h2>
+            <p>2026 advanced tools — net worth, subscriptions, forecast calendar, rules & more.</p>
+          </div>
+          <div class="insights-head-actions">
+            <button type="button" class="outline-btn" id="yearReviewBtn"><i data-lucide="book-open"></i> Year in review</button>
+            <button type="button" class="primary-btn" id="printReportBtn"><i data-lucide="printer"></i> Print / PDF</button>
+          </div>
+        </div>
+
+        <div class="adv-grid">
+          <article class="panel adv-card">
+            <div class="panel-heading">
+              <div>
+                <h3>Net worth</h3>
+                <p>Assets − debts</p>
+              </div>
+              <strong class="adv-hero-num" id="netWorthValue">—</strong>
+            </div>
+            <div class="adv-split">
+              <div>
+                <span class="muted">Assets</span>
+                <strong id="netWorthAssets">—</strong>
+              </div>
+              <div>
+                <span class="muted">Debts owed</span>
+                <strong id="netWorthDebts">—</strong>
+              </div>
+            </div>
+            <div class="adv-form-row">
+              <input id="assetName" type="text" maxlength="40" placeholder="Asset name (car, gold…)">
+              <input id="assetAmount" type="number" min="0" step="0.01" placeholder="Value">
+              <button type="button" class="outline-btn" id="addAssetBtn">Add</button>
+            </div>
+            <div id="assetsList" class="adv-list"></div>
+          </article>
+
+          <article class="panel adv-card">
+            <div class="panel-heading">
+              <div>
+                <h3>Subscriptions</h3>
+                <p>Recurring monthly costs</p>
+              </div>
+              <strong class="adv-hero-num" id="subsTotal">—</strong>
+            </div>
+            <div class="adv-form-row">
+              <input id="subName" type="text" maxlength="40" placeholder="Name (Netflix…)">
+              <input id="subAmount" type="number" min="0.01" step="0.01" placeholder="Amount">
+              <select id="subCycle">
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="weekly">Weekly</option>
+              </select>
+              <button type="button" class="outline-btn" id="addSubBtn">Add</button>
+            </div>
+            <div id="subsList" class="adv-list"></div>
+          </article>
+
+          <article class="panel adv-card">
+            <div class="panel-heading">
+              <div>
+                <h3>Cash-flow calendar</h3>
+                <p>This month’s activity by day</p>
+              </div>
+            </div>
+            <div id="cfCalendar" class="cf-calendar"></div>
+            <p class="muted" id="cfCalLegend" style="font-size:11px;margin:10px 0 0">Green = income · Red = expense</p>
+          </article>
+
+          <article class="panel adv-card">
+            <div class="panel-heading">
+              <div>
+                <h3>Savings challenge</h3>
+                <p>Pick a challenge and track days</p>
+              </div>
+            </div>
+            <div class="adv-form-row">
+              <select id="challengeType">
+                <option value="nospend">No-spend days</option>
+                <option value="save">Daily save streak</option>
+                <option value="coffee">Skip delivery / coffee</option>
+              </select>
+              <input id="challengeTarget" type="number" min="1" max="90" value="30" placeholder="Days">
+              <button type="button" class="outline-btn" id="startChallengeBtn">Start</button>
+            </div>
+            <div class="challenge-box" id="challengeBox">
+              <div class="challenge-progress"><div id="challengeFill" style="width:0%"></div></div>
+              <p id="challengeText" class="muted">No active challenge</p>
+              <button type="button" class="text-btn" id="challengeCheckInBtn" hidden>Check in today</button>
+            </div>
+          </article>
+
+          <article class="panel adv-card">
+            <div class="panel-heading">
+              <div>
+                <h3>Smart rules</h3>
+                <p>Auto-category from note keywords</p>
+              </div>
+            </div>
+            <div class="adv-form-row">
+              <input id="ruleKeyword" type="text" maxlength="30" placeholder="Keyword (uber, grocery…)">
+              <input id="ruleCategory" type="text" maxlength="30" placeholder="Category">
+              <button type="button" class="outline-btn" id="addRuleBtn">Add rule</button>
+            </div>
+            <div id="rulesList" class="adv-list"></div>
+          </article>
+
+          <article class="panel adv-card">
+            <div class="panel-heading">
+              <div>
+                <h3>What-if simulator</h3>
+                <p>See impact on monthly balance</p>
+              </div>
+            </div>
+            <div class="adv-form-row">
+              <input id="whatIfLabel" type="text" maxlength="40" placeholder="Change (e.g. rent)">
+              <input id="whatIfAmount" type="number" step="0.01" placeholder="+/- amount">
+              <button type="button" class="outline-btn" id="runWhatIfBtn">Simulate</button>
+            </div>
+            <p id="whatIfResult" class="whatif-result">Enter a monthly change to simulate.</p>
+          </article>
+
+          <article class="panel adv-card adv-card-wide">
+            <div class="panel-heading">
+              <div>
+                <h3>Anomaly watch</h3>
+                <p>Unusual spending vs your recent average</p>
+              </div>
+            </div>
+            <div id="anomalyList" class="adv-list"></div>
+          </article>
+        </div>
+
+        <div id="printReportArea" class="print-report" hidden></div>
+      </section>
+
+<section class="page-section" id="settingsPage">
+        <div class="section-intro">
+          <div>
+            <h2>Settings</h2>
+            <p>Appearance, security, backup and tools</p>
+          </div>
+        </div>
+        <button type="button" id="settingsAccountBtn" hidden tabindex="-1" aria-hidden="true"></button>
+
+        <!-- Pattern: grouped settings sections -->
+        <div class="settings-stack">
+
+          <section class="settings-section" aria-labelledby="settingsPrefTitle">
+            <header class="settings-section-head">
+              <div>
+                <h3 class="settings-group-title" id="settingsPrefTitle">Preferences</h3>
+                <p class="settings-group-sub">Theme, currency, navigation and language</p>
+              </div>
+            </header>
+            <div class="settings-cards-grid" id="settingsCardsGrid">
+              <article class="panel settings-card-main" data-settings-card="theme">
+                <div class="settings-card-icon"><i data-lucide="palette"></i></div>
+                <div class="settings-card-body">
+                  <h3 data-i18n="label_theme">Theme</h3>
+                  <p class="muted">Choose how Hisab Kitab looks</p>
+                </div>
+                <div class="settings-card-foot">
+                  <div class="sb-select-wrap settings-card-control">
+                    <select id="themeSelect" class="sb-select" aria-label="Theme">
+                      <option value="dark">Dark</option>
+                      <option value="light">Light</option>
+                      <option value="aurora">Aurora</option>
+                      <option value="sunset">Sunset</option>
+                      <option value="ocean">Ocean</option>
+                      <option value="neon">Neon</option>
+                      <option value="blush">Blush</option>
+                      <option value="graphite">Graphite</option>
+                      <option value="orchid">Orchid</option>
+                      <option value="citrus">Citrus</option>
+                      <option value="midnight">Midnight</option>
+                      <option value="sakura">Sakura</option>
+                      <option value="oled">OLED Black</option>
+                      <option value="ramadan">Ramadan Gold</option>
+                      <option value="emerald">Emerald</option>
+                      <option value="slate">Slate</option>
+                      <option value="coral">Coral</option>
+                      <option value="forest">Forest</option>
+                      <option value="royal">Royal</option>
+                      <option value="desert">Desert</option>
+                      <option value="arctic">Arctic</option>
+                      <option value="rose">Rose</option>
+                      <option value="amethyst">Amethyst</option>
+                      <option value="coffee">Coffee</option>
+                      <option value="crimson">Crimson</option>
+                      <option value="indigo">Indigo</option>
+                      <option value="mint">Mint</option>
+                      <option value="lavender">Lavender</option>
+                      <option value="honey">Honey</option>
+                      <option value="steel">Steel</option>
+                      <option value="berry">Berry</option>
+                      <option value="moss">Moss</option>
+                      <option value="sky">Sky</option>
+                      <option value="peach">Peach</option>
+                      <option value="plum">Plum</option>
+                      <option value="jade">Jade</option>
+                      <option value="bronze">Bronze</option>
+                      <option value="ice">Ice</option>
+                      <option value="wine">Wine</option>
+                      <option value="lime">Lime</option>
+                      <option value="navy">Navy</option>
+                      <option value="sand">Sand</option>
+                      <option value="violet">Violet</option>
+                      <option value="charcoal">Charcoal</option>
+                      <option value="flamingo">Flamingo</option>
+                      <option value="teal">Teal</option>
+                      <option value="amber">Amber</option>
+                      <option value="grape">Grape</option>
+                      <option value="olive">Olive</option>
+                      <option value="ruby">Ruby</option>
+                      <option value="aqua">Aqua</option>
+                      <option value="mocha">Mocha</option>
+                      <option value="electric">Electric</option>
+                      <option value="blossom">Blossom</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="sb-select-chevron"></i>
+                  </div>
+                </div>
+              </article>
+
+              <article class="panel settings-card-main" data-settings-card="density">
+                <div class="settings-card-icon"><i data-lucide="rows-3"></i></div>
+                <div class="settings-card-body">
+                  <h3>Density</h3>
+                  <p class="muted">Spacing, padding &amp; text size for the whole app</p>
+                </div>
+                <div class="settings-card-foot">
+                  <div class="sb-select-wrap settings-card-control">
+                    <select id="densitySelect" class="sb-select" aria-label="Density">
+                      <option value="ultra-spacious">Ultra spacious</option>
+                      <option value="spacious">Spacious</option>
+                      <option value="relaxed">Relaxed</option>
+                      <option value="large">Large</option>
+                      <option value="cozy">Cozy</option>
+                      <option value="comfortable" selected>Comfortable — default</option>
+                      <option value="balanced">Balanced</option>
+                      <option value="snug">Snug</option>
+                      <option value="compact">Compact</option>
+                      <option value="dense">Dense</option>
+                      <option value="tight">Tight</option>
+                      <option value="extra-compact">Extra compact</option>
+                      <option value="compressed">Compressed</option>
+                      <option value="ultra">Ultra dense</option>
+                      <option value="extreme">Extreme</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="sb-select-chevron"></i>
+                  </div>
+                </div>
+              </article>
+
+              <article class="panel settings-card-main" data-settings-card="motion">
+                <div class="settings-card-icon"><i data-lucide="sparkles"></i></div>
+                <div class="settings-card-body">
+                  <h3>Motion &amp; effects</h3>
+                  <p class="muted">Premium animations — change anytime</p>
+                </div>
+                <div class="settings-card-foot">
+                  <div class="sb-select-wrap settings-card-control">
+                    <select id="motionSelect" class="sb-select" aria-label="Motion">
+                      <option value="off">Off — no animation</option>
+                      <option value="subtle">Subtle — soft &amp; light</option>
+                      <option value="premium" selected>Premium — polished</option>
+                      <option value="bold">Bold — strong motion</option>
+                      <option value="cinematic">Cinematic — smooth film</option>
+                      <option value="playful">Playful — bouncy</option>
+                      <option value="neon">Neon — glow heavy</option>
+                      <option value="minimal">Minimal — micro only</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="sb-select-chevron"></i>
+                  </div>
+                </div>
+              </article>
+
+              <article class="panel settings-card-main" data-settings-card="currency">
+                <div class="settings-card-icon"><i data-lucide="coins"></i></div>
+                <div class="settings-card-body">
+                  <h3 data-i18n="label_currency">Base currency</h3>
+                  <p class="muted">Totals and reports use this currency</p>
+                </div>
+                <div class="settings-card-foot">
+                  <div class="sb-select-wrap settings-card-control">
+                    <select id="baseCurrencySelect" class="sb-select" aria-label="Base currency">
+                      <option value="SAR">SAR · Saudi Riyal</option>
+                      <option value="AED">AED · UAE Dirham</option>
+                      <option value="PKR">PKR · Pakistani Rupee</option>
+                      <option value="INR">INR · Indian Rupee</option>
+                      <option value="GBP">GBP · British Pound</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="sb-select-chevron"></i>
+                  </div>
+                </div>
+              </article>
+
+              <article class="panel settings-card-main" data-settings-card="nav">
+                <div class="settings-card-icon"><i data-lucide="panel-left"></i></div>
+                <div class="settings-card-body">
+                  <h3>Nav position</h3>
+                  <p class="muted">Sidebar left, right, top or bottom</p>
+                </div>
+                <div class="settings-card-foot">
+                  <div class="sb-select-wrap settings-card-control">
+                    <select id="navPosSelect" class="sb-select" aria-label="Nav position">
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="sb-select-chevron"></i>
+                  </div>
+                </div>
+              </article>
+
+              <article class="panel settings-card-main" data-settings-card="lang">
+                <div class="settings-card-icon"><i data-lucide="languages"></i></div>
+                <div class="settings-card-body">
+                  <h3>Language</h3>
+                  <p class="muted">Interface language</p>
+                </div>
+                <div class="settings-card-foot">
+                  <div class="sb-select-wrap settings-card-control">
+                    <select id="langSelect" class="sb-select" aria-label="Language">
+                      <option value="en">English</option>
+                      <option value="ar">العربية (Arabic)</option>
+                      <option value="ur">اردو (Urdu)</option>
+                      <option value="hi">हिन्दी (Hindi)</option>
+                      <option value="tr">Türkçe (Turkish)</option>
+                      <option value="fr">Français (French)</option>
+                      <option value="id">Bahasa Indonesia</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="sb-select-chevron"></i>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="settings-section" aria-labelledby="settingsAccountTitle">
+            <header class="settings-section-head">
+              <div>
+                <h3 class="settings-group-title" id="settingsAccountTitle">Security &amp; data</h3>
+                <p class="settings-group-sub">PIN lock, shortcuts and backup</p>
+              </div>
+            </header>
+            <div class="settings-cards-grid">
+              <article class="panel settings-card-main settings-card-action" data-settings-card="shortcuts">
+                <div class="settings-card-icon"><i data-lucide="keyboard"></i></div>
+                <div class="settings-card-body">
+                  <h3>Keyboard shortcuts</h3>
+                  <p class="muted">Quick keys for pages and actions</p>
+                </div>
+                <div class="settings-card-foot">
+                  <button type="button" class="primary-btn settings-card-btn" id="settingsShortcutsBtn">
+                    <i data-lucide="keyboard"></i> View shortcuts
+                  </button>
+                </div>
+              </article>
+
+
+              <article class="panel settings-card-main settings-card-action" data-settings-card="lock">
+                <div class="settings-card-icon"><i data-lucide="shield"></i></div>
+                <div class="settings-card-body">
+                  <h3>App lock &amp; PIN</h3>
+                  <p class="muted">Protect this device with a PIN</p>
+                </div>
+                <div class="settings-card-foot">
+                  <button type="button" class="outline-btn settings-card-btn" id="settingsLockBtn">
+                    <i data-lucide="shield"></i> Lock settings
+                  </button>
+                </div>
+              </article>
+
+              <article class="panel settings-card-main settings-card-action" data-settings-card="backup">
+                <div class="settings-card-icon"><i data-lucide="cloud-upload"></i></div>
+                <div class="settings-card-body">
+                  <h3>Backup &amp; restore</h3>
+                  <p class="muted">Export or import your data</p>
+                </div>
+                <div class="settings-card-foot">
+                  <button type="button" class="outline-btn settings-card-btn" id="settingsBackupOpenBtn">
+                    <i data-lucide="download"></i> Backup / Restore
+                  </button>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="settings-section" aria-labelledby="settingsToolsTitle">
+            <header class="settings-section-head">
+              <div>
+                <h3 class="settings-group-title" id="settingsToolsTitle" data-i18n="tools_title">Tools</h3>
+                <p class="settings-group-sub">Zakat, install app, reports and privacy</p>
+              </div>
+            </header>
+            <div class="settings-cards-grid settings-tools-grid">
+              <article class="panel tool-card settings-card-main">
+                <div class="settings-card-icon"><i data-lucide="calculator"></i></div>
+                <div class="settings-card-body">
+                  <h3 data-i18n="zakat_title">Zakat calculator</h3>
+                  <p class="muted" data-i18n="zakat_sub">2.5% of eligible wealth (simple estimate).</p>
+                </div>
+                <div class="settings-card-foot">
+                  <label class="tx-field settings-inline-field">
+                    <span>Eligible wealth</span>
+                    <input id="zakatWealth" type="number" min="0" step="0.01" placeholder="e.g. 50000">
+                  </label>
+                  <div class="settings-zakat-row">
+                    <span data-i18n="zakat_due">Zakat due</span>
+                    <strong id="zakatResult">—</strong>
+                  </div>
+                  <button type="button" class="primary-btn settings-card-btn" id="calcZakatBtn">
+                    <i data-lucide="calculator"></i> Calculate
+                  </button>
+                </div>
+              </article>
+
+              <article class="panel tool-card settings-card-main">
+                <div class="settings-card-icon"><i data-lucide="download"></i></div>
+                <div class="settings-card-body">
+                  <h3>Install app</h3>
+                  <p class="muted">Add to home screen for offline access</p>
+                </div>
+                <div class="settings-card-foot">
+                  <button type="button" class="primary-btn settings-card-btn" id="installPwaBtn" style="margin-bottom:8px">
+                    <i data-lucide="download"></i> Install / Add to Home
+                  </button>
+                  <button type="button" class="outline-btn settings-card-btn" id="replayOnboardBtn">
+                    <i data-lucide="sparkles"></i> Replay welcome
+                  </button>
+                </div>
+              </article>
+
+              <article class="panel tool-card settings-card-main">
+                <div class="settings-card-icon"><i data-lucide="printer"></i></div>
+                <div class="settings-card-body">
+                  <h3>Reports &amp; data</h3>
+                  <p class="muted">Print monthly report or export CSV</p>
+                </div>
+                <div class="settings-card-foot">
+                  <button type="button" class="primary-btn settings-card-btn" id="printReportBtn" style="margin-bottom:8px">
+                    <i data-lucide="printer"></i> Print / PDF report
+                  </button>
+                  <button type="button" class="outline-btn settings-card-btn" id="exportCsvToolsBtn">
+                    <i data-lucide="download"></i> Export CSV
+                  </button>
+                </div>
+              </article>
+
+              <article class="panel tool-card settings-card-main">
+                <div class="settings-card-icon"><i data-lucide="shield-check"></i></div>
+                <div class="settings-card-body">
+                  <h3>Privacy</h3>
+                  <p class="muted">Data stays on this device only. No cloud required. Use Backup to export JSON.</p>
+                </div>
+                <p class="settings-card-hint">Tip: enable PIN lock for extra privacy.</p>
+              </article>
+            </div>
+          </section>
+
+
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>© <span id="year"></span> Hisab Kitab Premium</span>
+        <span>Simple money management <b>•</b> Data stays on your device</span>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ADD / EDIT TRANSACTION MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="tx-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="tx-modal-head">
+        <h2 id="modalTitle">Add transaction</h2>
+        <button type="button" class="tx-modal-close" id="closeModal" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <form id="transactionForm" class="tx-modal-form">
+        <input type="hidden" id="editId" value="">
+        <input type="hidden" id="entryType" value="income">
+        <span class="eyebrow" id="modalEyebrow" hidden>NEW ENTRY</span>
+
+        <div class="tx-type-tabs" role="tablist">
+          <button type="button" class="tx-type-tab selected" data-type="income" role="tab">Income</button>
+          <button type="button" class="tx-type-tab" data-type="expense" role="tab">Expense</button>
+          <button type="button" class="tx-type-tab" data-type="remittance" role="tab">Remittance</button>
+          <button type="button" class="tx-type-tab" data-type="transfer" role="tab">Transfer</button>
+        </div>
+
+        <label class="tx-field">
+          <span>Category</span>
+          <select id="category" hidden aria-hidden="true" tabindex="-1">
+            <option value="">Select category…</option>
+          </select>
+          <div class="hk-select" id="categorySelectUi" data-for="category">
+            <button type="button" class="hk-select-trigger" id="categoryTrigger" aria-haspopup="listbox" aria-expanded="false">
+              <span id="categoryTriggerLabel">Select category…</span>
+              <i data-lucide="chevron-down"></i>
+            </button>
+            <div class="hk-select-menu" id="categoryMenu" role="listbox" hidden></div>
+          </div>
+        </label>
+
+        <!-- kept for JS compatibility; filled from note or category -->
+        <select id="descriptionSelect" hidden>
+          <option value="Other / Custom">Other / Custom</option>
+        </select>
+        <input type="hidden" id="description" value="">
+
+        <div class="tx-row">
+          <label class="tx-field tx-amount-wrap">
+            <span>Amount</span>
+            <div class="tx-amount-group">
+              <input id="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required>
+              <select id="txCurrency" aria-label="Currency" required>
+                <option value="SAR">SAR</option>
+                <option value="AED">AED</option>
+                <option value="PKR">PKR</option>
+                <option value="INR">INR</option>
+                <option value="GBP">GBP</option>
+              </select>
+            </div>
+          </label>
+          <label class="tx-field">
+            <span>Date</span>
+            <input id="date" type="date" required>
+          </label>
+        </div>
+
+        <label class="tx-field">
+          <span>Note</span>
+          <div class="tx-note-row">
+            <input id="txNote" type="text" maxlength="80" placeholder="e.g. Monthly salary from employer">
+            <button type="button" class="icon-btn" id="voiceNoteBtn" title="Voice input"><i data-lucide="mic"></i></button>
+          </div>
+        </label>
+        <label class="tx-field">
+          <span>Receipt (optional)</span>
+          <input id="txReceipt" type="file" accept="image/*">
+        </label>
+
+        <div class="tx-advanced" id="txAdvanced">
+          <label class="tx-field">
+            <span>Account / From</span>
+            <select id="txAccount">
+              <option value="Cash">Cash</option>
+              <option value="Bank">Bank</option>
+              <option value="Card">Card</option>
+              <option value="JazzCash">JazzCash</option>
+              <option value="Easypaisa">Easypaisa</option>
+              <option value="Wallet">Digital Wallet</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label class="tx-field" id="txTransferToWrap" hidden>
+            <span>Transfer to</span>
+            <select id="txTransferTo">
+              <option value="Cash">Cash</option>
+              <option value="Bank">Bank</option>
+              <option value="Card">Card</option>
+              <option value="JazzCash">JazzCash</option>
+              <option value="Easypaisa">Easypaisa</option>
+              <option value="Wallet">Digital Wallet</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label class="tx-field">
+            <span>Tags (comma separated)</span>
+            <input id="txTags" type="text" maxlength="80" placeholder="e.g. work, family, urgent">
+          </label>
+          <label class="tx-check">
+            <input id="txRecurring" type="checkbox">
+            <span>Repeat this entry</span>
+          </label>
+          <label class="tx-field" id="txRecurringFreqWrap" hidden>
+            <span>Repeat every</span>
+            <select id="txRecurringFreq">
+              <option value="monthly">Month</option>
+              <option value="weekly">Week</option>
+              <option value="yearly">Year</option>
+            </select>
+          </label>
+          <label class="tx-field">
+            <span>Receipt (optional)</span>
+            <input id="txReceipt" type="file" accept="image/*">
+          </label>
+          <input type="hidden" id="txReceiptData" value="">
+        </div>
+        <button type="button" class="tx-more-btn" id="txMoreToggle">More options</button>
+
+        <div class="tx-modal-actions">
+          <button type="button" class="tx-btn-cancel" id="cancelModal">Cancel</button>
+          <button type="submit" class="tx-btn-save" id="submitLabel">
+            <i data-lucide="check"></i> Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SET BUDGET MODAL -->
+  <div class="modal-backdrop" id="budgetModalBackdrop">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-heading">
+        <div>
+          <span class="eyebrow">BUDGET</span>
+          <h2>Set Monthly Budget</h2>
+        </div>
+        <button class="icon-btn" id="closeBudgetModal" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <form id="budgetForm">
+        <label>Monthly spending limit (base currency)
+          <input id="budgetAmount" type="number" min="1" step="1" placeholder="e.g. 5000" required>
+        </label>
+        <p class="muted" style="font-size:11px;margin:-6px 0 18px">This helps you stay aware of your spending throughout the month.</p>
+        <div class="modal-actions">
+          <button type="button" class="outline-btn" id="cancelBudgetModal">Cancel</button>
+          <button type="submit" class="primary-btn submit-btn"><i data-lucide="check"></i>Save Budget</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- AUTH / LOGIN SCREEN -->
+  <div class="auth-screen" id="authScreen" hidden>
+    <div class="auth-bg" aria-hidden="true"></div>
+    <div class="auth-card">
+      <button type="button" class="auth-close" id="authCloseBtn" aria-label="Close">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="auth-brand">
+        <div class="brand-mark"><i data-lucide="wallet"></i></div>
+        <div>
+          <strong>Hisab Kitab</strong>
+          <span>PREMIUM FINANCE</span>
+        </div>
+      </div>
+      <p class="auth-lead">Sign in to your private workspace on this device.</p>
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="auth-tab active" data-auth-tab="login" role="tab">Sign in</button>
+        <button type="button" class="auth-tab" data-auth-tab="register" role="tab">Create account</button>
+      </div>
+
+      <form id="loginForm" class="auth-form" autocomplete="on">
+        <label class="auth-field">Email
+          <div class="auth-input-wrap">
+            <i data-lucide="mail"></i>
+            <input id="loginEmail" type="email" placeholder="name@email.com" required autocomplete="username">
+          </div>
+        </label>
+        <label class="auth-field">Password
+          <div class="auth-input-wrap">
+            <i data-lucide="lock"></i>
+            <input id="loginPassword" type="password" placeholder="Your password" required minlength="4" autocomplete="current-password">
+            <button type="button" class="auth-eye" data-eye="loginPassword" aria-label="Show password"><i data-lucide="eye"></i></button>
+          </div>
+        </label>
+        <button type="submit" class="primary-btn submit-btn auth-submit" id="loginBtn"><i data-lucide="log-in"></i> Sign in</button>
+      </form>
+
+      <form id="registerForm" class="auth-form" hidden autocomplete="on">
+        <label class="auth-field">Full name
+          <div class="auth-input-wrap">
+            <i data-lucide="user"></i>
+            <input id="registerName" type="text" placeholder="Your name" required maxlength="40" autocomplete="name">
+          </div>
+        </label>
+        <label class="auth-field">Email
+          <div class="auth-input-wrap">
+            <i data-lucide="mail"></i>
+            <input id="registerEmail" type="email" placeholder="name@email.com" required autocomplete="email">
+          </div>
+        </label>
+        <label class="auth-field">Mobile number
+          <div class="auth-input-wrap">
+            <i data-lucide="phone"></i>
+            <input id="registerMobile" type="tel" placeholder="e.g. 03XX XXXXXXX" maxlength="20" autocomplete="tel">
+          </div>
+        </label>
+        <label class="auth-field">Password
+          <div class="auth-input-wrap">
+            <i data-lucide="lock"></i>
+            <input id="registerPassword" type="password" placeholder="Min. 4 characters" required minlength="4" autocomplete="new-password">
+            <button type="button" class="auth-eye" data-eye="registerPassword" aria-label="Show password"><i data-lucide="eye"></i></button>
+          </div>
+        </label>
+        <label class="auth-field">Confirm password
+          <div class="auth-input-wrap">
+            <i data-lucide="shield-check"></i>
+            <input id="registerPassword2" type="password" placeholder="Repeat password" required minlength="4" autocomplete="new-password">
+            <button type="button" class="auth-eye" data-eye="registerPassword2" aria-label="Show password"><i data-lucide="eye"></i></button>
+          </div>
+        </label>
+        <button type="submit" class="primary-btn submit-btn auth-submit" id="registerBtn"><i data-lucide="user-plus"></i> Create account</button>
+      </form>
+
+      <p class="auth-error" id="authError" hidden role="alert"></p>
+
+      <div class="auth-divider-line"><span>or</span></div>
+      <button type="button" class="auth-guest-btn" id="guestContinueBtn">
+        <i data-lucide="arrow-right"></i>
+        Continue without account
+      </button>
+      <p class="auth-note">You can create an account later. Data stays on this device — use Backup in profile to export.</p>
+    </div>
+  </div>
+
+  <!-- APP LOCK SCREEN (vault unlock) -->
+  <div class="lock-screen" id="lockScreen" hidden>
+    <div class="vault-panel vault-unlock">
+      <div class="vault-left">
+        <div class="vault-dial on">
+          <div class="vd-glow"></div>
+          <div class="vd-outer"></div>
+          <div class="vd-ticks"></div>
+          <div class="vd-inner">
+            <div class="vd-core"><i data-lucide="lock"></i></div>
+          </div>
+          <div class="vd-led vd-led-top"></div>
+          <div class="vd-led vd-led-left"></div>
+          <div class="vd-arc-label" id="unlockDialStatus">Locked · Enter PIN</div>
+        </div>
+        <p class="vault-idle-tag" id="unlockIdleTag">Protection Active</p>
+      </div>
+      <div class="vault-right">
+        <h2 class="vault-title">Unlock Hisab Kitab</h2>
+        <p class="vault-sub" id="unlockSubText">Enter your security PIN</p>
+        <form id="unlockForm" class="vault-form">
+          <label class="vault-label">PIN
+            <div class="pin-field" id="unlockPinField">
+              <input id="unlockPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" required>
+              <div class="pin-dots" data-for="unlockPin"></div>
+              <button type="button" class="pin-eye" data-toggle="unlockPin" aria-label="Show PIN"><i data-lucide="eye"></i></button>
+            </div>
+          </label>
+          <div class="pin-keypad" id="pinKeypad">
+            <button type="button" data-key="1">1</button>
+            <button type="button" data-key="2">2</button>
+            <button type="button" data-key="3">3</button>
+            <button type="button" data-key="4">4</button>
+            <button type="button" data-key="5">5</button>
+            <button type="button" data-key="6">6</button>
+            <button type="button" data-key="7">7</button>
+            <button type="button" data-key="8">8</button>
+            <button type="button" data-key="9">9</button>
+            <button type="button" data-key="clear" class="key-muted">C</button>
+            <button type="button" data-key="0">0</button>
+            <button type="button" data-key="del" class="key-muted">⌫</button>
+          </div>
+          <button type="submit" class="vault-btn-gold">UNLOCK</button>
+        </form>
+        <p class="lock-hint" id="lockHint"></p>
+        <p class="lock-attempts muted" id="lockAttempts"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP LOCK SETTINGS (clean settings panel) -->
+  <div class="modal-backdrop" id="lockModalBackdrop">
+    <div class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="settings-head">
+        <h2 id="settingsTitle">Settings</h2>
+        <button type="button" class="settings-close" id="closeLockModal" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="settings-body">
+        <!-- Change PIN -->
+        <section class="settings-card">
+          <div class="settings-card-title">
+            <i data-lucide="key-round"></i>
+            <span>Change PIN</span>
+            <em class="settings-status" id="lockStatusText">Protection Off</em>
+          </div>
+          <form id="lockForm" class="settings-pin-form" autocomplete="off">
+            <div class="settings-pin-grid">
+              <label class="settings-field" id="lockCurrentWrap">
+                <span>Current PIN</span>
+                <div class="settings-pin-input">
+                  <input id="lockCurrentPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="••••">
+                </div>
+              </label>
+              <label class="settings-field">
+                <span>New PIN</span>
+                <div class="settings-pin-input">
+                  <input id="lockNewPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="••••">
+                </div>
+              </label>
+              <label class="settings-field">
+                <span>Confirm new PIN</span>
+                <div class="settings-pin-input">
+                  <input id="lockConfirmPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="••••">
+                </div>
+              </label>
+            </div>
+
+            <div class="settings-row-between">
+              <div class="pin-len-toggle" id="pinLenToggle" role="group" aria-label="PIN length">
+                <button type="button" class="pin-len-btn active" data-pin-len="4">4 digits</button>
+                <button type="button" class="pin-len-btn" data-pin-len="6">6 digits</button>
+              </div>
+              <div class="pin-strength-mini" id="pinStrengthWrap" hidden>
+                <span id="pinStrengthBadge">—</span>
+              </div>
+            </div>
+            <p class="pin-strength-tip muted" id="pinStrengthText" hidden></p>
+            <div id="pinStrengthSegments" hidden><i></i><i></i><i></i><i></i></div>
+            <div class="pin-strength-bar" hidden><div id="pinStrengthFill"></div></div>
+
+            <div class="settings-actions-row">
+              <button type="submit" class="settings-btn-primary" id="lockSubmitLabel">
+                <i data-lucide="shield-check"></i>
+                <span>Update PIN</span>
+              </button>
+              <button type="button" class="settings-btn-ghost" id="lockNowBtn" hidden>Lock now</button>
+              <button type="button" class="settings-btn-danger-text" id="removeLockBtn" hidden>Remove lock</button>
+            </div>
+            <p class="settings-hint" id="lockIdleTag">Set a PIN to protect your data on this device.</p>
+          </form>
+        </section>
+
+        <!-- Auto-lock -->
+        <section class="settings-card">
+          <div class="settings-card-title">
+            <i data-lucide="timer"></i>
+            <span>Auto-lock after inactivity</span>
+          </div>
+          <label class="settings-field">
+            <select id="autoLockSelect" class="settings-select">
+              <option value="0">Off (manual only)</option>
+              <option value="auto">Automatic</option>
+              <option value="1">1 minute</option>
+              <option value="2">2 minutes</option>
+              <option value="5" selected>5 minutes</option>
+              <option value="10">10 minutes</option>
+              <option value="15">15 minutes</option>
+              <option value="30">30 minutes</option>
+            </select>
+          </label>
+          <label class="settings-check">
+            <input id="lockOnHide" type="checkbox">
+            <span>Lock when switching tabs / apps</span>
+          </label>
+          <label class="settings-check">
+            <input id="lockBackupGuard" type="checkbox">
+            <span>Require PIN for Backup / Export</span>
+          </label>
+        </section>
+
+        <!-- Data & backup -->
+        <section class="settings-card">
+          <div class="settings-card-title">
+            <i data-lucide="database"></i>
+            <span>Data & backup</span>
+          </div>
+          <div class="settings-btn-grid">
+            <button type="button" class="settings-btn-outline" id="settingsBackupBtn">
+              <i data-lucide="download"></i> Backup JSON
+            </button>
+            <label class="settings-btn-outline" style="cursor:pointer">
+              <i data-lucide="upload"></i> Restore JSON
+              <input type="file" id="settingsImportInput" accept=".json,application/json" hidden>
+            </label>
+            <button type="button" class="settings-btn-outline" id="settingsSampleBtn">
+              <i data-lucide="rotate-ccw"></i> Load sample data
+            </button>
+          </div>
+        </section>
+
+        <button type="button" class="settings-btn-ghost full" id="cancelLockModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ACCOUNT / PASSWORD MODAL -->
+  <div class="modal-backdrop" id="accountModalBackdrop">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
+      <div class="modal-heading">
+        <div>
+          <span class="eyebrow">ACCOUNT</span>
+          <h2 id="accountModalTitle">Account & password</h2>
+        </div>
+        <button class="icon-btn" id="closeAccountModal" type="button" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <form id="accountForm">
+        <label>Full name
+          <input id="accName" type="text" maxlength="40" required placeholder="Your name" autocomplete="name">
+        </label>
+        <label>Mobile number
+          <input id="accMobile" type="tel" maxlength="20" placeholder="e.g. 03XX XXXXXXX" autocomplete="tel">
+        </label>
+        <label>Email
+          <input id="accEmail" type="email" readonly tabindex="-1">
+        </label>
+        <div class="account-pass-block" id="accountPassBlock">
+          <div class="eyebrow" style="margin:14px 0 10px">CHANGE PASSWORD</div>
+          <label>Current password
+            <input id="accCurrentPass" type="password" minlength="4" autocomplete="current-password" placeholder="Current password">
+          </label>
+          <label>New password
+            <input id="accNewPass" type="password" minlength="4" autocomplete="new-password" placeholder="Min. 4 characters">
+          </label>
+          <label>Confirm new password
+            <input id="accNewPass2" type="password" minlength="4" autocomplete="new-password" placeholder="Repeat new password">
+          </label>
+          <p class="muted" style="font-size:11px;margin:-4px 0 8px">Leave password fields empty if you only want to update name / mobile.</p>
+        </div>
+        <p class="auth-error" id="accountError" hidden role="alert"></p>
+        <div class="modal-actions" style="display:flex;gap:8px;margin-top:12px">
+          <button type="button" class="outline-btn" id="cancelAccountModal">Cancel</button>
+          <button type="submit" class="primary-btn">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- BACKUP MODAL -->
+  <div class="modal-backdrop" id="backupModalBackdrop">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-heading">
+        <div>
+          <span class="eyebrow">DATA</span>
+          <h2>Backup & Restore</h2>
+        </div>
+        <button class="icon-btn" id="closeBackupModal" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <p class="muted" style="font-size:11px;margin:0 0 16px">Save a full backup of transactions, budget and settings. Restore anytime or keep a copy in Gmail.</p>
+      <div class="backup-actions">
+        <button type="button" class="primary-btn" id="exportBackupBtn" style="width:100%;justify-content:center">
+          <i data-lucide="download"></i> Download backup (.json)
+        </button>
+        <button type="button" class="outline-btn" id="emailBackupBtn" style="width:100%;justify-content:center">
+          <i data-lucide="mail"></i> Send backup via Gmail
+        </button>
+        <div class="backup-divider"><span>or restore</span></div>
+        <label class="outline-btn backup-import-label" style="width:100%;justify-content:center;cursor:pointer">
+          <i data-lucide="upload"></i> Restore from file
+          <input type="file" id="importBackupInput" accept=".json,application/json" hidden>
+        </label>
+      </div>
+      <p class="muted" style="font-size:10px;margin:14px 0 0">Gmail option downloads the file and opens Gmail compose — attach the downloaded file to your email.</p>
+    </div>
+  </div>
+
+  <!-- GOAL MODAL -->
+  <div class="modal-backdrop" id="goalModalBackdrop">
+    <div class="modal-card" role="dialog">
+      <div class="modal-heading"><div><span class="eyebrow">GOAL</span><h2>Saving goal</h2></div>
+        <button class="icon-btn" id="closeGoalModal"><i data-lucide="x"></i></button></div>
+      <form id="goalForm">
+        <label>Name <input id="goalName" required maxlength="40" placeholder="e.g. New phone"></label>
+        <label>Target amount <input id="goalTarget" type="number" min="1" step="0.01" required></label>
+        <label>Saved so far <input id="goalSaved" type="number" min="0" step="0.01" value="0"></label>
+        <div class="modal-actions">
+          <button type="button" class="outline-btn" id="cancelGoalModal">Cancel</button>
+          <button type="submit" class="primary-btn">Save goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DEBT MODAL -->
+  <div class="modal-backdrop" id="debtModalBackdrop">
+    <div class="modal-card" role="dialog">
+      <div class="modal-heading"><div><span class="eyebrow">DEBT</span><h2>Add debt</h2></div>
+        <button class="icon-btn" id="closeDebtModal"><i data-lucide="x"></i></button></div>
+      <form id="debtForm">
+        <label>Person <input id="debtPerson" required maxlength="40" placeholder="Name"></label>
+        <div class="form-row">
+          <label>Type
+            <select id="debtType"><option value="lend">I lent (to receive)</option><option value="borrow">I borrowed (to pay)</option></select>
+          </label>
+          <label>Amount <input id="debtAmount" type="number" min="0.01" step="0.01" required></label>
+        </div>
+        <label>Note <input id="debtNote" maxlength="60" placeholder="Optional"></label>
+        <label>Due date <input id="debtDue" type="date"></label>
+        <div class="modal-actions">
+          <button type="button" class="outline-btn" id="cancelDebtModal">Cancel</button>
+          <button type="submit" class="primary-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- BILL MODAL -->
+  <div class="modal-backdrop" id="billModalBackdrop">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-heading">
+        <div>
+          <span class="eyebrow">BILL</span>
+          <h2 id="billModalTitle">Add bill</h2>
+        </div>
+        <button class="icon-btn" id="closeBillModal" type="button" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <form id="billForm">
+        <label>Name <input id="billName" type="text" maxlength="60" placeholder="e.g. Electricity" required></label>
+        <label>Amount <input id="billAmount" type="number" min="0.01" step="0.01" required></label>
+        <label>Due date <input id="billDue" type="date" required></label>
+        <label>Repeat
+          <select id="billRepeat">
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="once">One-time</option>
+          </select>
+        </label>
+        <label>Notes <input id="billNote" type="text" maxlength="80" placeholder="Optional"></label>
+        <div class="modal-actions" style="display:flex;gap:8px;margin-top:12px">
+          <button type="button" class="outline-btn" id="cancelBillModal">Cancel</button>
+          <button type="submit" class="primary-btn">Save bill</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ONBOARDING -->
+  <div class="modal-backdrop" id="onboardBackdrop">
+    <div class="modal-card" role="dialog">
+      <div class="modal-heading"><div><span class="eyebrow">WELCOME</span><h2 id="onboardTitle">Hisab Kitab</h2></div></div>
+      <p id="onboardText" class="muted" style="font-size:13px;line-height:1.6;margin:0 0 16px">Track income, expenses, budgets, bills and goals — private by design. Data stays on this device.</p>
+      <ul class="onboard-list" id="onboardList">
+        <li>Multi-currency transactions, transfers & tags</li>
+        <li>Budget, goals, debts and bill reminders</li>
+        <li>Zakat calculator & printable reports</li>
+        <li>Backup anytime · Optional PIN lock · No cloud required</li>
+      </ul>
+      <div class="modal-actions">
+        <button type="button" class="primary-btn" id="onboardNextBtn" style="width:100%;justify-content:center">Get started</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command palette -->
+  <div class="cmd-backdrop" id="cmdBackdrop" hidden>
+    <div class="cmd-panel" role="dialog" aria-label="Command palette">
+      <div class="cmd-input-wrap">
+        <i data-lucide="search"></i>
+        <input id="cmdInput" type="text" placeholder="Type a command… (goal, debt, backup, theme)" autocomplete="off">
+        <kbd>Esc</kbd>
+      </div>
+      <div class="cmd-list" id="cmdList"></div>
+    </div>
+  </div>
+
+  <!-- WALLET — remaining balance only -->
+  <div class="modal-backdrop" id="walletModalBackdrop">
+    <div class="modal-card wallet-card" role="dialog" aria-modal="true">
+      <button type="button" class="icon-btn wallet-mini-close" id="closeWalletModal" aria-label="Close" onclick="window.closeWalletModal&&window.closeWalletModal()"><i data-lucide="x"></i></button>
+      <span class="eyebrow">ACCOUNTS & BALANCE</span>
+      <div class="wallet-total-value" id="walletTotal">—</div>
+      <p class="wallet-mini-sub muted" id="walletSub">Income − expenses</p>
+      <div class="wallet-accounts" id="walletAccountsList"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <i data-lucide="check-circle-2"></i>
+    <span id="toastMsg">Saved successfully</span>
+    <button type="button" class="toast-action" id="toastAction" hidden>Undo</button>
+  </div>
+
+  <div class="particle-layer" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+  <div class="ambient-orbs" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <button type="button" class="fab-add" id="fabAddBtn" title="Add transaction" aria-label="Add transaction">
+    <i data-lucide="plus"></i>
+  </button>
+
+  <script src="script.js?v=225"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.update());
+        });
+        navigator.serviceWorker.register("./sw.js?v=125").catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
